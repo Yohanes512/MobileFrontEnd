@@ -30,110 +30,114 @@ class _Homepage extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(170),
-        child: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          flexibleSpace: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 12,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Hello Yakuza',
-                            style: TextStyle(fontSize: 16, color: Colors.black),
+        preferredSize: const Size.fromHeight(100), // Bisa diatur sesuka hati
+        child: Container(
+          color: Colors.white,
+          padding: const EdgeInsets.only(
+            top: 8, // ini jarak atas yang sangat kecil
+            left: 20,
+            right: 20,
+            bottom: 10,
+          ),
+          child: SafeArea(
+            bottom: false, // supaya SafeArea hanya untuk atas, bukan bawah
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Hello Yakuza',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'What would you like to cook today?',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
-                          SizedBox(height: 4),
-                          Text(
-                            'What would you like to cook today?',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                      CircleAvatar(backgroundImage: AssetImage('profile.jpg')),
-                    ],
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  DropdownMenu<MenuItem>(
-                    controller: menuController,
-                    width: MediaQuery.of(context).size.width - 40,
-                    hintText: "Select Menu",
-                    requestFocusOnTap: true,
-                    enableFilter: true,
-                    menuStyle: MenuStyle(
-                      backgroundColor: WidgetStateProperty.all<Color>(
-                        Colors.lightBlue.shade50,
-                      ),
+                        ),
+                      ],
                     ),
-                    label: const Text('Select Menu'),
-                    onSelected: (MenuItem? menu) {
-                      setState(() {
-                        selectedMenu = menu;
-                        if (menu?.label == 'Sushi') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Sushi(),
-                            ),
-                          );
-                        }
-                      });
-                    },
-                    dropdownMenuEntries:
-                        menuItems.map<DropdownMenuEntry<MenuItem>>((
-                          MenuItem menu,
-                        ) {
-                          return DropdownMenuEntry<MenuItem>(
-                            value: menu,
-                            label: menu.label,
-                            leadingIcon: Icon(menu.icon),
-                          );
-                        }).toList(),
+                    CircleAvatar(
+                      backgroundImage: AssetImage('profile.jpg'),
+                      radius: 20,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                DropdownMenu<MenuItem>(
+                  controller: menuController,
+                  hintText: "Select Menu",
+                  requestFocusOnTap: true,
+                  enableFilter: true,
+                  menuStyle: MenuStyle(
+                    backgroundColor: WidgetStateProperty.all<Color>(
+                      Colors.lightBlue.shade50,
+                    ),
                   ),
-                ],
-              ),
+                  label: const Text('Select Menu'),
+                  onSelected: (MenuItem? menu) {
+                    setState(() {
+                      selectedMenu = menu;
+                      if (menu?.label == 'Sushi') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Sushi(),
+                          ),
+                        );
+                      }
+                    });
+                  },
+                  dropdownMenuEntries:
+                      menuItems.map<DropdownMenuEntry<MenuItem>>((
+                        MenuItem menu,
+                      ) {
+                        return DropdownMenuEntry<MenuItem>(
+                          value: menu,
+                          label: menu.label,
+                          leadingIcon: Icon(menu.icon),
+                        );
+                      }).toList(),
+                ),
+              ],
             ),
           ),
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 48),
           child: Padding(
-            padding: const EdgeInsets.all(50),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Categories
+                // Kategori dan konten lainnya tetap sama...
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
                     Text(
                       'Categories',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                     Text('See all', style: TextStyle(color: Colors.blue)),
                   ],
                 ),
-
                 const SizedBox(height: 12),
-
-                // Category Icons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: const [
@@ -146,82 +150,129 @@ class _Homepage extends State<Homepage> {
                     _CategoryItem(icon: Icons.icecream, label: 'Dessert'),
                   ],
                 ),
-
                 const SizedBox(height: 24),
-
-                // Go Premium
-                const Text(
-                  'Go Premium',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                  'Unlock exclusive features and elevate your experience!',
-                  style: TextStyle(fontSize: 14),
-                ),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => PremiumPage()),
-                    );
-                  },
-                  child: const Text('Unlock Now'),
-                ),
-
-                const SizedBox(height: 10),
-
-                //Recipe
-                const Text("Recipe Populer"),
-                SizedBox(
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.orange.withOpacity(0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          _ImageCard('food1.jpg', 'Sushi'),
-                          _ImageCard('food1.jpg', 'Sushi'),
-                        ],
+                      const Text(
+                        'Go Premium',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                      Row(
-                        children: [
-                          _ImageCard('food1.jpg', 'Sushi'),
-                          _ImageCard('food1.jpg', 'Sushi'),
-                        ],
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Unlock exclusive features and elevate your experience!',
+                        style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
-                      Row(
-                        children: [
-                          _ImageCard('food1.jpg', 'Sushi'),
-                          _ImageCard('food1.jpg', 'Sushi'),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          _ImageCard('food1.jpg', 'Sushi'),
-                          _ImageCard('food1.jpg', 'Sushi'),
-                        ],
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.deepOrange,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PremiumPage(),
+                            ),
+                          );
+                        },
+                        child: const Text('Unlock Now'),
                       ),
                     ],
                   ),
                 ),
-
-                const SizedBox(height: 50),
-
-                const Text("Last seen"),
-                _ImageCard('food1.jpg', 'Sushi'),
-
-                const SizedBox(height: 50),
-                const Text("Newest Recipe"),
-                Row(
-                  children: [
-                    _ImageCard('food1.jpg', 'Sushi'),
-                    _ImageCard('food1.jpg', 'Sushi'),
-                    _ImageCard('food1.jpg', 'Sushi'),
-                  ],
+                const SizedBox(height: 30),
+                const Text(
+                  "Recipe Populer",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 12),
+                _buildRecipeGrid(),
+                const SizedBox(height: 30),
+                const Text(
+                  "Last seen",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 12),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: const [
+                      _ImageCard('food1.jpg', 'Sushi'),
+                      SizedBox(width: 12),
+                      _ImageCard('food1.jpg', 'Sushi'),
+                      SizedBox(width: 12),
+                      _ImageCard('food1.jpg', 'Sushi'),
+                      SizedBox(width: 12),
+                      _ImageCard('food1.jpg', 'Sushi'),
+                      SizedBox(width: 12),
+                      _ImageCard('food1.jpg', 'Sushi'),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                const Text(
+                  "Newest Recipe",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 10),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: const [
+                      _ImageCard('food1.jpg', 'Sushi'),
+                      SizedBox(width: 12),
+                      _ImageCard('food1.jpg', 'Sushi'),
+                      SizedBox(width: 12),
+                      _ImageCard('food1.jpg', 'Sushi'),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildRecipeGrid() {
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
+      children: List.generate(
+        6,
+        (index) => const _ImageCard('food1.jpg', 'Sushi'),
       ),
     );
   }
@@ -237,7 +288,11 @@ class _CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CircleAvatar(radius: 24, child: Icon(icon, size: 28)),
+        CircleAvatar(
+          radius: 26,
+          backgroundColor: Colors.orange.shade100,
+          child: Icon(icon, size: 28, color: Colors.deepOrange),
+        ),
         const SizedBox(height: 6),
         Text(label, style: const TextStyle(fontSize: 12)),
       ],
