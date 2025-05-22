@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'landing_page.dart';
 import 'package:project_1/mainhome.dart';
 
 void main() {
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-      home: const MainHomeScreen(),
+      home: const LandingPage(),
     );
   }
 }
