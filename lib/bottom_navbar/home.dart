@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:project_1/recipe.dart';
+import 'package:project_1/sushi.dart';
 import 'package:project_1/premium/premium.dart';
+import 'package:project_1/recipe_data.dart';
+import 'package:project_1/dynamic_page.dart';
+import 'package:project_1/pizza.dart';
 
 class MenuItem {
   final int id;
@@ -30,17 +33,11 @@ class _Homepage extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(100), // Bisa diatur sesuka hati
         child: Container(
           color: Colors.white,
-          padding: const EdgeInsets.only(
-            top: 8, // ini jarak atas yang sangat kecil
-            left: 20,
-            right: 20,
-            bottom: 10,
-          ),
           child: SafeArea(
             bottom: false, // supaya SafeArea hanya untuk atas, bukan bawah
             child: Column(
@@ -74,17 +71,12 @@ class _Homepage extends State<Homepage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
                 DropdownMenu<MenuItem>(
                   controller: menuController,
                   hintText: "Select Menu",
                   requestFocusOnTap: true,
                   enableFilter: true,
-                  menuStyle: MenuStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                      Colors.lightBlue.shade50,
-                    ),
-                  ),
+                  menuStyle: MenuStyle(),
                   label: const Text('Select Menu'),
                   onSelected: (MenuItem? menu) {
                     setState(() {
@@ -213,30 +205,23 @@ class _Homepage extends State<Homepage> {
                 ),
                 const SizedBox(height: 30),
                 const Text(
-                  "Recipe Populer",
+                  "Discover Recipe",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                const SizedBox(height: 12),
-                _buildRecipeGrid(),
                 const SizedBox(height: 30),
-                const Text(
-                  "Last seen",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                const SizedBox(height: 12),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: const [
-                      _ImageCard('food1.jpg', 'Sushi'),
+                    children: [
+                      _ImageCard('food1.jpg', 'Sushi', () => Sushi()),
                       SizedBox(width: 12),
-                      _ImageCard('food1.jpg', 'Sushi'),
+                      _ImageCard('food1.jpg', 'Sushi', () => Sushi()),
                       SizedBox(width: 12),
-                      _ImageCard('food1.jpg', 'Sushi'),
+                      _ImageCard('food1.jpg', 'Sushi', () => Sushi()),
                       SizedBox(width: 12),
-                      _ImageCard('food1.jpg', 'Sushi'),
+                      _ImageCard('food1.jpg', 'Sushi', () => Sushi()),
                       SizedBox(width: 12),
-                      _ImageCard('food1.jpg', 'Sushi'),
+                      _ImageCard('food1.jpg', 'Sushi', () => Sushi()),
                     ],
                   ),
                 ),
@@ -249,12 +234,17 @@ class _Homepage extends State<Homepage> {
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: const [
-                      _ImageCard('food1.jpg', 'Sushi'),
-                      SizedBox(width: 12),
-                      _ImageCard('food1.jpg', 'Sushi'),
-                      SizedBox(width: 12),
-                      _ImageCard('food1.jpg', 'Sushi'),
+                    children: [
+                      ...userRecipes.map(
+                        (recipe) => Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: _ImageCard(
+                            recipe.imagePath,
+                            recipe.title,
+                            () => DynamicRecipePage(recipe: recipe),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -262,17 +252,6 @@ class _Homepage extends State<Homepage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildRecipeGrid() {
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      children: List.generate(
-        6,
-        (index) => const _ImageCard('food1.jpg', 'Sushi'),
       ),
     );
   }
@@ -303,8 +282,9 @@ class _CategoryItem extends StatelessWidget {
 class _ImageCard extends StatelessWidget {
   final String imagePath;
   final String caption;
+  final Widget Function() onTapPage;
 
-  const _ImageCard(this.imagePath, this.caption);
+  const _ImageCard(this.imagePath, this.caption, this.onTapPage, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -312,7 +292,7 @@ class _ImageCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const Sushi()),
+          MaterialPageRoute(builder: (context) => onTapPage()),
         );
       },
       child: Column(
