@@ -27,6 +27,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _Homepage extends State<Homepage> {
+  String selectedPage = '';
   MenuItem? selectedMenu;
   final TextEditingController menuController = TextEditingController();
 
@@ -34,77 +35,110 @@ class _Homepage extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100), // Bisa diatur sesuka hati
-        child: Container(
-          color: Colors.white,
-          child: SafeArea(
-            bottom: false, // supaya SafeArea hanya untuk atas, bukan bawah
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Hello Yakuza',
-                          style: TextStyle(fontSize: 16, color: Colors.black),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          'What would you like to cook today?',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    CircleAvatar(
-                      backgroundImage: AssetImage('profile.jpg'),
-                      radius: 20,
-                    ),
-                  ],
-                ),
-                DropdownMenu<MenuItem>(
-                  controller: menuController,
-                  hintText: "Select Menu",
-                  requestFocusOnTap: true,
-                  enableFilter: true,
-                  menuStyle: MenuStyle(),
-                  label: const Text('Select Menu'),
-                  onSelected: (MenuItem? menu) {
-                    setState(() {
-                      selectedMenu = menu;
-                      if (menu?.label == 'Sushi') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Sushi(),
-                          ),
-                        );
-                      }
-                    });
-                  },
-                  dropdownMenuEntries:
-                      menuItems.map<DropdownMenuEntry<MenuItem>>((
-                        MenuItem menu,
-                      ) {
-                        return DropdownMenuEntry<MenuItem>(
-                          value: menu,
-                          label: menu.label,
-                          leadingIcon: Icon(menu.icon),
-                        );
-                      }).toList(),
-                ),
-              ],
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: true,
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Hello Yakuza',
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
+            SizedBox(height: 2),
+            Text(
+              'What would you like to cook today?',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('profile.jpg'),
+              radius: 18,
             ),
           ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: DropdownMenu<MenuItem>(
+              controller: menuController,
+              hintText: "Select Menu",
+              requestFocusOnTap: true,
+              enableFilter: true,
+              label: const Text('Select Menu'),
+              onSelected: (MenuItem? menu) {
+                setState(() {
+                  selectedMenu = menu;
+                  if (menu?.label == 'Sushi') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Sushi()),
+                    );
+                  }
+                });
+              },
+              dropdownMenuEntries:
+                  menuItems.map<DropdownMenuEntry<MenuItem>>((MenuItem menu) {
+                    return DropdownMenuEntry<MenuItem>(
+                      value: menu,
+                      label: menu.label,
+                      leadingIcon: Icon(menu.icon),
+                    );
+                  }).toList(),
+            ),
+          ),
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Text(
+                'Drawer Header',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.message),
+              title: const Text('Messages'),
+              onTap: () {
+                setState(() {
+                  selectedPage = 'Messages';
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.account_circle),
+              title: const Text('Profile'),
+              onTap: () {
+                setState(() {
+                  selectedPage = 'Profile';
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                setState(() {
+                  selectedPage = 'Settings';
+                });
+              },
+            ),
+          ],
         ),
       ),
       body: SafeArea(
@@ -115,7 +149,6 @@ class _Homepage extends State<Homepage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Kategori dan konten lainnya tetap sama...
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
@@ -214,13 +247,13 @@ class _Homepage extends State<Homepage> {
                   child: Row(
                     children: [
                       _ImageCard('food1.jpg', 'Sushi', () => Sushi()),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       _ImageCard('food1.jpg', 'Sushi', () => Sushi()),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       _ImageCard('food1.jpg', 'Sushi', () => Sushi()),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       _ImageCard('food1.jpg', 'Sushi', () => Sushi()),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       _ImageCard('food1.jpg', 'Sushi', () => Sushi()),
                     ],
                   ),
