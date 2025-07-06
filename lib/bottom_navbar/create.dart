@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_1/recipe_data.dart';
 
 class RecipeFormPage extends StatefulWidget {
   const RecipeFormPage({super.key});
@@ -52,13 +53,25 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
           flexibleSpace: Row(
             children: [
-              Row(children: [const BackButton()]),
               SizedBox(width: 225),
               ElevatedButton(
                 onPressed: () {
-                  // handle form submission
+                  userRecipes.add(
+                    Recipe(
+                      title: menuNameController.text,
+                      description: descriptionController.text,
+                      ingredients: ingredients.map((e) => e.text).toList(),
+                      steps: steps.map((e) => e.text).toList(),
+                      imagePath:
+                          'food1.jpg', // atau biarkan pengguna upload gambar
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade400,
